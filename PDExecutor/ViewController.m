@@ -23,7 +23,19 @@
         [PDExecutor oncePerformInSeconds:0.5f forKey:NSStringFromSelector(_cmd) block:^{
             NSLog(@"i = (%d)", i);
         }];
-    }    
+    }
+    
+    [self perform];
+}
+
+- (void)perform {
+    [PDExecutor oncePerformInSeconds:0.5 forKey:NSStringFromSelector(_cmd) block:^{
+        NSLog(@"perform >>>");
+    } completion:^(BOOL finished) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self perform];
+        });
+    }];
 }
 
 - (void)didReceiveMemoryWarning {

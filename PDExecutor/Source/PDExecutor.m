@@ -12,7 +12,6 @@
 #define Unlock() dispatch_semaphore_signal(__lock())
 
 static NSString *const kLastExecuteTimestampKey = @"kLastExecuteTimestampKey";
-static NSString *const kExecuteInSecondsKey = @"kExecuteInSecondsKey";
 
 static NSMutableDictionary *__executeDict() {
     static NSMutableDictionary *__executeDict;
@@ -34,8 +33,6 @@ static dispatch_semaphore_t __lock() {
 
 @implementation PDExecutor
 
-// infoDict {kLastExecuteTimestampKey: xxx, kExecuteInSecondsKey: xxx}
-// __executeDict {key: infoDict, key1: infoDict1}
 + (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(id)key
                        block:(dispatch_block_t)block {
     [self oncePerformInSeconds:secs forKey:key block:block completion:nil];
@@ -48,22 +45,17 @@ static dispatch_semaphore_t __lock() {
     NSAssert(key != nil, @"Param key cannot be nil");
     
     Lock();
-    NSDictionary *infoDict = __executeDict()[key];
-    if (!infoDict) infoDict = [NSDictionary dictionary];
-    
-    NSTimeInterval lastExecuteTimestamp = [infoDict[kLastExecuteTimestampKey] doubleValue];
+    NSTimeInterval lastExecuteTimestamp = [__executeDict()[key] doubleValue];
     NSTimeInterval currentTimestamp = [NSDate date].timeIntervalSince1970;
     Unlock();
     
     if (currentTimestamp - lastExecuteTimestamp < secs) {
         return;
     }
-    lastExecuteTimestamp = currentTimestamp;
     
     Lock();
-    infoDict = @{kLastExecuteTimestampKey: @(lastExecuteTimestamp),
-                 kExecuteInSecondsKey: @(secs)};
-    [__executeDict() setObject:infoDict forKey:key];
+    lastExecuteTimestamp = currentTimestamp;
+    [__executeDict() setObject:@(lastExecuteTimestamp) forKey:key];
     Unlock();
     
     if (block) block();
