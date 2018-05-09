@@ -56,6 +56,15 @@ static dispatch_semaphore_t __lock() {
     Lock();
     lastExecuteTimestamp = currentTimestamp;
     [__executeDict() setObject:@(lastExecuteTimestamp) forKey:key];
+    
+    NSArray<NSString *> *allKeys = [__executeDict().allKeys copy];
+
+    if (allKeys.count > 30) {
+        for (NSString *tmpKey in allKeys) {
+            if ([tmpKey isEqualToString:key]) continue;
+            [__executeDict() removeObjectForKey:tmpKey]; break;
+        }
+    }
     Unlock();
     
     if (block) block();
