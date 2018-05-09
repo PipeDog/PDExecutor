@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "PDExecutor.h"
 
 @interface ViewController ()
 
@@ -17,8 +18,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    for (int i = 0; i < 10; i ++) {
+        [PDExecutor oncePerformInSeconds:0.5f forKey:NSStringFromSelector(_cmd) block:^{
+            NSLog(@"i = (%d)", i);
+        }];
+    }    
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

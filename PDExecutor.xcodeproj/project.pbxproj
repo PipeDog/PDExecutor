@@ -15,6 +15,7 @@
 		ECEE377B20A298AC00C92745 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE377A20A298AC00C92745 /* main.m */; };
 		ECEE378520A298AC00C92745 /* PDExecutorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE378420A298AC00C92745 /* PDExecutorTests.m */; };
 		ECEE379020A298AC00C92745 /* PDExecutorUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE378F20A298AC00C92745 /* PDExecutorUITests.m */; };
+		ECEE37A020A298C800C92745 /* PDExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = ECEE379F20A298C800C92745 /* PDExecutor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		ECEE378B20A298AC00C92745 /* PDExecutorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDExecutorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECEE378F20A298AC00C92745 /* PDExecutorUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDExecutorUITests.m; sourceTree = "<group>"; };
 		ECEE379120A298AC00C92745 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ECEE379E20A298C800C92745 /* PDExecutor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDExecutor.h; sourceTree = "<group>"; };
+		ECEE379F20A298C800C92745 /* PDExecutor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDExecutor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,7 @@
 		ECEE376A20A298A700C92745 /* PDExecutor */ = {
 			isa = PBXGroup;
 			children = (
+				ECEE379D20A298B300C92745 /* Source */,
 				ECEE376B20A298A700C92745 /* AppDelegate.h */,
 				ECEE376C20A298A700C92745 /* AppDelegate.m */,
 				ECEE376E20A298A700C92745 /* ViewController.h */,
@@ -130,6 +134,15 @@
 				ECEE379120A298AC00C92745 /* Info.plist */,
 			);
 			path = PDExecutorUITests;
+			sourceTree = "<group>";
+		};
+		ECEE379D20A298B300C92745 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				ECEE379E20A298C800C92745 /* PDExecutor.h */,
+				ECEE379F20A298C800C92745 /* PDExecutor.m */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -264,6 +277,7 @@
 			files = (
 				ECEE377020A298A800C92745 /* ViewController.m in Sources */,
 				ECEE377B20A298AC00C92745 /* main.m in Sources */,
+				ECEE37A020A298C800C92745 /* PDExecutor.m in Sources */,
 				ECEE376D20A298A700C92745 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
