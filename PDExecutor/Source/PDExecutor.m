@@ -13,7 +13,7 @@
 
 static NSString *const kLastExecuteTimestampKey = @"kLastExecuteTimestampKey";
 
-static NSMutableDictionary *__executeDict() {
+static NSMutableDictionary<NSString *, NSNumber *> *__executeDict() {
     static NSMutableDictionary *__executeDict;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -33,12 +33,12 @@ static dispatch_semaphore_t __lock() {
 
 @implementation PDExecutor
 
-+ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(id)key
++ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(NSString *)key
                        block:(dispatch_block_t)block {
     [self oncePerformInSeconds:secs forKey:key block:block completion:nil];
 }
 
-+ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(id)key
++ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(NSString *)key
                        block:(dispatch_block_t)block
                   completion:(void (^)(BOOL finished))completion {
     NSAssert(secs > 0, @"Param secs must greater or equal to 0");

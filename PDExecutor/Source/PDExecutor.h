@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDExecutor : NSObject
 
-+ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(id)key
++ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(NSString *)key
                        block:(dispatch_block_t)block;
 
-+ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(id)key
++ (void)oncePerformInSeconds:(NSTimeInterval)secs forKey:(NSString *)key
                        block:(dispatch_block_t)block
                   completion:(void (^ _Nullable)(BOOL finished))completion;
 
