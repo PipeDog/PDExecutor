@@ -8,28 +8,15 @@
 
 #import "PDExecutor.h"
 
-#define Lock() dispatch_semaphore_wait(__lock(), DISPATCH_TIME_FOREVER)
-#define Unlock() dispatch_semaphore_signal(__lock())
+#define Lock() dispatch_semaphore_wait(self.lock, DISPATCH_TIME_FOREVER)
+#define Unlock() dispatch_semaphore_signal(self.lock)
 
-static NSString *const kLastExecuteTimestampKey = @"kLastExecuteTimestampKey";
+@interface PDExecutor ()
 
-static NSMutableDictionary<NSString *, NSNumber *> *__executeDict() {
-    static NSMutableDictionary *__executeDict;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __executeDict = [NSMutableDictionary dictionary];
-    });
-    return __executeDict;
-}
+@property (class, strong, readonly) NSMutableDictionary<NSString *, NSNumber *> *handlers;
+@property (class, strong, readonly) dispatch_semaphore_t lock;
 
-static dispatch_semaphore_t __lock() {
-    static dispatch_semaphore_t __lock;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __lock = dispatch_semaphore_create(1);
-    });
-    return __lock;
-}
+@end
 
 @implementation PDExecutor
 
@@ -45,7 +32,7 @@ static dispatch_semaphore_t __lock() {
     NSAssert(key != nil, @"Param key cannot be nil");
     
     Lock();
-    NSTimeInterval lastExecuteTimestamp = [__executeDict()[key] doubleValue];
+    NSTimeInterval lastExecuteTimestamp = [self.handlers[key] doubleValue];
     NSTimeInterval currentTimestamp = [NSDate date].timeIntervalSince1970;
     Unlock();
     
@@ -55,20 +42,40 @@ static dispatch_semaphore_t __lock() {
     
     Lock();
     lastExecuteTimestamp = currentTimestamp;
-    [__executeDict() setObject:@(lastExecuteTimestamp) forKey:key];
+    [self.handlers setObject:@(lastExecuteTimestamp) forKey:key];
     
-    NSArray<NSString *> *allKeys = [__executeDict().allKeys copy];
+    NSArray<NSString *> *allKeys = [self.handlers.allKeys copy];
 
     if (allKeys.count > 30) {
         for (NSString *tmpKey in allKeys) {
             if ([tmpKey isEqualToString:key]) continue;
-            [__executeDict() removeObjectForKey:tmpKey]; break;
+            [self.handlers removeObjectForKey:tmpKey]; break;
         }
     }
     Unlock();
     
-    if (block) block();
-    if (completion) completion(YES);
+    !block ?: block();
+    !completion ?: completion(YES);
 }
+
+#pragma mark - Getter Methods
++ (NSMutableDictionary<NSString *,NSNumber *> *)handlers {
+    static NSMutableDictionary *_handlers = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _handlers = [NSMutableDictionary dictionary];
+    });
+    return _handlers;
+}
+
++ (dispatch_semaphore_t)lock {
+    static dispatch_semaphore_t _lock;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _lock = dispatch_semaphore_create(1);
+    });
+    return _lock;
+}
+
 
 @end
